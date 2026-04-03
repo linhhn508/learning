@@ -7,15 +7,14 @@
     <div class="form-group">
         <label for="title">Title</label>
         <input type="text" name="title"
-               placeholder="Post title" class="form-control"
-               value="{{ post['title'] }}"></input>
+               placeholder="Post title" class="form-control input-title"
+               value="{{ post['title'] }}">
     </div>
 
     <div class="form-group">
         <label for="content">Content</label>
-        <textarea name="content" 
-              placeholder="Write your amazing post here..."
-              class="form-control input-content">{{ request.form['content'] }}</textarea>
+        <textarea name="content" placeholder="Post content"
+                  class="form-control input-content">{{ post['content'] }}</textarea>
     </div>
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Submit</button>
