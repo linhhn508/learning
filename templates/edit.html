@@ -13,8 +13,9 @@
 
     <div class="form-group">
         <label for="content">Content</label>
-        <textarea name="content" placeholder="Post content"
-                  class="form-control input-content" rows="10">{{ post['content'] }}</textarea>
+        <textarea name="content" 
+              placeholder="Write your amazing post here..."
+              class="form-control input-content">{{ request.form['content'] }}</textarea>
     </div>
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Submit</button>

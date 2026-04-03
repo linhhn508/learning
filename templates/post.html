@@ -19,7 +19,7 @@
             <hr>
             
             <div class="card-text mt-4" style="font-size: 1.15rem; line-height: 1.7; color: #444;">
-                <p class="preserve-lines">{{ post['content'] }}</p>
+                <div>{{ post['content'] | safe }}</div>
             </div>
         </div>
         
