@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request, url_for, flash, redirect, jsonify
 from werkzeug.exceptions import abort
+from werkzeug.utils import secure_filename
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
 from datetime import datetime
+import os
 
 def get_post(post_id):
     # Catch InvalidId in case the user types a bad ID in the URL
@@ -22,6 +24,12 @@ def get_post(post_id):
 app = Flask(__name__)
 client = MongoClient('localhost', 27017)
 app.config['SECRET_KEY']= '123'
+
+# --- NEW: Configure Upload Folder ---
+UPLOAD_FOLDER = os.path.join('static', 'uploads')
+os.makedirs(UPLOAD_FOLDER, exist_ok=True) # Creates the folder if it doesn't exist
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 db = client['blog']
 collection = db['posts']
 
@@ -94,3 +102,30 @@ def delete(post_id):
     collection.delete_one({"_id": ObjectId(post_id)})
     flash(f'"{post["title"]}" was successfully deleted!', 'success') # Uncommented and updated
     return redirect(url_for('index'))
+
+
+# --- NEW: Image Upload Route ---
+@app.route('/upload_image', methods=['POST'])
+def upload_image():
+    # 1. Check if a file was sent
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part'}), 400
+    
+    file = request.files['file']
+    
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+        
+    if file:
+        # 2. Sanitize the filename so it is safe for the filesystem
+        filename = secure_filename(file.filename)
+        
+        # 3. Save the image to static/uploads/
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(filepath)
+        
+        # 4. Generate the URL to access the image
+        image_url = url_for('static', filename=f'uploads/{filename}')
+        
+        # 5. TinyMCE strictly requires the response to be in this exact JSON format
+        return jsonify({'location': image_url})
