@@ -1,0 +1,42 @@
+/* Change the overall background to a soft off-white */
+body {
+    background-color: #f4f7f6;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Add a subtle shadow to the navigation bar */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,.08);
+    background-color: #ffffff !important; 
+}
+
+/* Make the blog post cards elevate when you hover over them */
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 8px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,.12) !important;
+}
+
+/* Custom styling for the post title links */
+.card-title a {
+    color: #2c3e50 !important;
+    transition: color 0.2s;
+}
+
+.card-title a:hover {
+    color: #3498db !important;
+}
+
+.preserve-lines {
+    white-space: pre-wrap;
+}
+
+
+.input-content {
+    min-height: 250px; /* This is roughly equal to 10 rows */
+    resize: vertical;  /* Allows the user to drag and make it taller if needed */
+}

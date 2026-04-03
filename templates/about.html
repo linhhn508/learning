@@ -1,0 +1,18 @@
+{% block title %} About - FlaskBlog {% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8 text-center">
+        <h1 class="mb-4">About FlaskBlog</h1>
+        <p class="lead">
+            Welcome to my blog! This website was built from scratch to explore full-stack development, 
+            learn the ins and outs of Flask, and prepare for modern deployment practices.
+        </p>
+        <hr class="my-4">
+        <p>
+            Built using Python, Flask, MongoDB, and Bootstrap. 
+        </p>
+        <a href="{{ url_for('index') }}" class="btn btn-primary mt-3">Back to Home</a>
+    </div>
+</div>
+{% endblock %}

@@ -3,6 +3,7 @@ from werkzeug.exceptions import abort
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
+from datetime import datetime
 
 def get_post(post_id):
     # Catch InvalidId in case the user types a bad ID in the URL
@@ -19,7 +20,7 @@ def get_post(post_id):
     return post
 
 app = Flask(__name__)
-client = MongoClient('test-mongo', 27017)
+client = MongoClient('localhost', 27017)
 app.config['SECRET_KEY']= '123'
 db = client['blog']
 collection = db['posts']
@@ -28,13 +29,22 @@ collection = db['posts']
 def index():
     post_collection = []
     
-    posts = collection.find()
+    search_query = request.args.get('q')
+
+    if search_query:
+        posts = collection.find({"title": {"$regex": search_query, "$options": "i"}})
+    else:
+        posts = collection.find()
+
     for post in posts:
-        # Convert the ObjectId to a string for each document
         post['id'] = str(post['_id'])
         post_collection.append(post)
 
-    return render_template('index.html', posts=post_collection)
+    return render_template('index.html', posts=post_collection, search_query=search_query)
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
 
 @app.route('/<string:post_id>')
 def post(post_id):
@@ -48,9 +58,14 @@ def create():
         content = request.form['content']
 
         if not title:
-            flash('Title is required!')
+            flash('Title is required!', 'danger')
         else:
-            collection.insert_one({'title': title, 'content': content})
+            collection.insert_one({
+                'title': title, 
+                'content': content,
+                'created': datetime.now().strftime("%Y-%m-%d %H:%M")
+            })
+            flash('Post created successfully!', 'success')
             return redirect(url_for('index'))
 
     return render_template('create.html')
@@ -75,6 +90,7 @@ def edit(post_id):
 
 @app.route('/<string:post_id>/delete', methods=('POST',))
 def delete(post_id):
+    post = get_post(post_id)
     collection.delete_one({"_id": ObjectId(post_id)})
-    # flash('"{}" was successfully deleted!'.format(post['title']))
+    flash(f'"{post["title"]}" was successfully deleted!', 'success') # Uncommented and updated
     return redirect(url_for('index'))
