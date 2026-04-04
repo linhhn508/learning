@@ -1,3 +1,5 @@
+import boto3
+from botocore.client import Config
 from flask import Flask, render_template, request, url_for, flash, redirect, jsonify
 from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
@@ -32,6 +34,16 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 db = client['blog']
 collection = db['posts']
+
+s3_client = boto3.client('s3',
+    endpoint_url='http://localhost:9000',
+    aws_access_key_id='admin',
+    aws_secret_access_key='password123',
+    # addressing_style='path' is required for MinIO — without it boto3 may generate
+    # virtual-hosted-style URLs (blog-image.localhost:9000) that MinIO can't route.
+    config=Config(signature_version='s3v4', s3={'addressing_style': 'path'}),
+    region_name='us-east-1'
+)
 
 @app.route('/')
 def index():
@@ -120,24 +132,25 @@ def upload_image():
         # 2. Sanitize the filename to prevent path traversal
         filename = secure_filename(file.filename)
 
-        # 3. Optionally scope uploads to a per-post subfolder.
-        #    Validate post_id is a real ObjectId to block path-traversal attempts.
+        # 3. Scope uploads into a per-post subfolder when post_id is provided
+        #    (edit page), or a flat folder for new posts (create page).
+        #    Always validate post_id as a real ObjectId to block path-traversal.
         post_id = request.args.get('post_id', '').strip()
-        try:
-            if post_id:
+        if post_id:
+            try:
                 ObjectId(post_id)  # raises InvalidId if not a valid 24-hex string
-                subfolder = os.path.join(app.config['UPLOAD_FOLDER'], post_id)
-                static_path = f'uploads/{post_id}/{filename}'
-            else:
-                subfolder = app.config['UPLOAD_FOLDER']
-                static_path = f'uploads/{filename}'
-        except InvalidId:
-            return jsonify({'error': 'Invalid post_id'}), 400
+            except InvalidId:
+                return jsonify({'error': 'Invalid post_id'}), 400
+            object_key = f"{post_id}/{filename}"
+        else:
+            object_key = filename
 
-        # 4. Create the subfolder if needed and save the file
-        os.makedirs(subfolder, exist_ok=True)
-        file.save(os.path.join(subfolder, filename))
+        s3_client.upload_fileobj(
+            file,
+            'blog-image',
+            object_key,
+            ExtraArgs={'ContentType': file.content_type}
+        )
 
-        # 5. Return an absolute URL path so TinyMCE (convert_urls:false) stores it correctly
-        image_url = url_for('static', filename=static_path)
+        image_url = f"http://localhost:9000/blog-image/{object_key}"
         return jsonify({'location': image_url})

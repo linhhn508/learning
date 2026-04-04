@@ -6,3 +6,8 @@ flask run -p 5000 -h 0.0.0.0
 
 docker run -p 8000:5000 --name test_web_app --network=mynetwork web_app:latest
 docker run -d --name test-mongo --network=mynetwork mongo:7.0.32-rc1
+
+
+mc alias set local http://localhost:9000 admin password123
+
+mc anonymous set public data/blog-image
