@@ -6,9 +6,12 @@
 <form method="post">
     <div class="form-group">
         <label for="title">Title</label>
-        <input type="text" name="title"
+        <input type="text" id="titleInput" name="title"
                placeholder="Post title" class="form-control"
-               value="{{ request.form['title'] }}"></input>
+               value="{{ request.form['title'] }}" maxlength="120">
+        <small class="form-text text-muted text-right">
+            <span id="charCount">0</span> / 120
+        </small>
     </div>
 
     <div class="form-group">
@@ -17,8 +20,20 @@
               placeholder="Write your amazing post here..."
               class="form-control input-content">{{ request.form['content'] }}</textarea>
     </div>
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary">Submit</button>
+    <div class="form-group d-flex">
+        <button type="submit" class="btn btn-primary mr-2">&#10003; Publish Post</button>
+        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">&#8592; Cancel</a>
     </div>
 </form>
+
+<script>
+    // Title character counter
+    const titleInput = document.getElementById('titleInput');
+    const charCount = document.getElementById('charCount');
+    // Initialise on page load (e.g. after a failed validation redirect)
+    charCount.textContent = titleInput.value.length;
+    titleInput.addEventListener('input', function () {
+        charCount.textContent = this.value.length;
+    });
+</script>
 {% endblock %}

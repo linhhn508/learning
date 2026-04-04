@@ -2,6 +2,10 @@
 body {
     background-color: #f4f7f6;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* Push footer to bottom even on short pages */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Add a subtle shadow to the navigation bar */
@@ -35,8 +39,52 @@ body {
     white-space: pre-wrap;
 }
 
-
 .input-content {
     min-height: 250px; /* This is roughly equal to 10 rows */
     resize: vertical;  /* Allows the user to drag and make it taller if needed */
+}
+
+/* ── Card fade-in animation ── */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-card {
+    animation: fadeInUp 0.4s ease both;
+}
+
+/* Stagger delay for cards 1-6 */
+.fade-in-card:nth-child(1) { animation-delay: 0.05s; }
+.fade-in-card:nth-child(2) { animation-delay: 0.10s; }
+.fade-in-card:nth-child(3) { animation-delay: 0.15s; }
+.fade-in-card:nth-child(4) { animation-delay: 0.20s; }
+.fade-in-card:nth-child(5) { animation-delay: 0.25s; }
+.fade-in-card:nth-child(6) { animation-delay: 0.30s; }
+
+/* ── Sticky footer ── */
+.site-footer {
+    background-color: #ffffff;
+    border-top: 1px solid #e9ecef;
+    padding: 1rem 0;
+    font-size: 0.875rem;
+    color: #6c757d;
+    box-shadow: 0 -2px 4px rgba(0,0,0,.04);
+}
+
+/* ── Empty state ── */
+.empty-state {
+    padding: 3rem 1rem;
+    color: #adb5bd;
+}
+
+/* ── Title character counter ── */
+#charCount {
+    transition: color 0.2s;
 }

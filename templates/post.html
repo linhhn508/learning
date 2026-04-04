@@ -3,18 +3,29 @@
 {% block title %} {{ post['title'] }} - FlaskBlog {% endblock %}
 
 {% block content %}
+{% set word_count = post['content'] | striptags | wordcount %}
+{% set read_time = [((word_count / 200) | round(0, 'ceil') | int), 1] | max %}
+
     <div class="card shadow-sm border-0 mt-4">
         <div class="card-body p-5">
-            <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex justify-content-between align-items-start mb-3">
                 <h1 class="card-title text-dark mb-0">{{ post['title'] }}</h1>
-                <a href="{{ url_for('edit', post_id=post['id']) }}" class="btn btn-outline-warning btn-sm">Edit Post</a>
+                <div class="ml-3 d-flex flex-column align-items-end" style="flex-shrink: 0;">
+                    <a href="{{ url_for('edit', post_id=post['id']) }}" class="btn btn-outline-warning btn-sm mb-1">&#9998; Edit</a>
+                    <button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#deleteModal">
+                        &#128465; Delete
+                    </button>
+                </div>
             </div>
             
-            {% if post['created'] %}
-                <span class="badge badge-info mb-4">{{ post['created'] }}</span>
-            {% else %}
-                <span class="badge badge-secondary mb-4">No Date</span>
-            {% endif %}
+            <div class="mb-4">
+                {% if post['created'] %}
+                    <span class="badge badge-info mr-1">{{ post['created'] }}</span>
+                {% else %}
+                    <span class="badge badge-secondary mr-1">No Date</span>
+                {% endif %}
+                <span class="badge badge-light text-muted border">&#128214; {{ read_time }} min read</span>
+            </div>
             
             <hr>
             
@@ -25,6 +36,29 @@
         
         <div class="card-footer bg-white border-0 pb-4 px-5">
             <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">&larr; Back to Home</a>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title text-danger" id="deleteModalLabel">&#9888; Delete Post</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to permanently delete <strong>"{{ post['title'] }}"</strong>? This action cannot be undone.
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <form action="{{ url_for('delete', post_id=post['id']) }}" method="POST" class="d-inline">
+                        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

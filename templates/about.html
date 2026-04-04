@@ -1,3 +1,5 @@
+{% extends 'base.html' %}
+
 {% block title %} About - FlaskBlog {% endblock %}
 
 {% block content %}
@@ -9,10 +11,16 @@
             learn the ins and outs of Flask, and prepare for modern deployment practices.
         </p>
         <hr class="my-4">
-        <p>
-            Built using Python, Flask, MongoDB, and Bootstrap. 
-        </p>
-        <a href="{{ url_for('index') }}" class="btn btn-primary mt-3">Back to Home</a>
+        <h5 class="text-muted mb-3">Built with</h5>
+        <div class="mb-4">
+            <span class="badge badge-pill badge-primary p-2 m-1" style="font-size: 0.9rem;">Python 3.12</span>
+            <span class="badge badge-pill badge-success p-2 m-1" style="font-size: 0.9rem;">Flask</span>
+            <span class="badge badge-pill badge-warning p-2 m-1" style="font-size: 0.9rem;">MongoDB</span>
+            <span class="badge badge-pill badge-info p-2 m-1" style="font-size: 0.9rem;">Bootstrap 4</span>
+            <span class="badge badge-pill badge-secondary p-2 m-1" style="font-size: 0.9rem;">TinyMCE</span>
+            <span class="badge badge-pill badge-dark p-2 m-1" style="font-size: 0.9rem;">Docker</span>
+        </div>
+        <a href="{{ url_for('index') }}" class="btn btn-primary mt-3">&larr; Back to Home</a>
     </div>
 </div>
 {% endblock %}
