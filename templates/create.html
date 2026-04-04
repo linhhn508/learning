@@ -1,9 +1,15 @@
 {% extends 'base.html' %}
 
+{# Route all image uploads for this draft into its own subfolder, same as edit #}
+{% block tinymce_upload_url %}/upload_image?post_id={{ draft_id }}{% endblock %}
+
 {% block content %}
 <h1>{% block title %} Create a New Post {% endblock %}</h1>
 
-<form method="post">
+<form id="post-form" method="post">
+    {# Carry draft_id through re-renders caused by validation failures #}
+    <input type="hidden" name="draft_id" value="{{ draft_id }}">
+
     <div class="form-group">
         <label for="title">Title</label>
         <input type="text" id="titleInput" name="title"
@@ -22,9 +28,13 @@
     </div>
     <div class="form-group d-flex">
         <button type="submit" class="btn btn-primary mr-2">&#10003; Publish Post</button>
-        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">&#8592; Cancel</a>
+        {# Cancel submits the discard form, which deletes the draft's MinIO folder #}
+        <button type="submit" form="discard-form" class="btn btn-outline-secondary">&#8592; Cancel</button>
     </div>
 </form>
+
+{# Separate form so the Cancel button can POST to a different URL #}
+<form id="discard-form" action="{{ url_for('discard_draft', draft_id=draft_id) }}" method="POST"></form>
 
 <script>
     // Title character counter

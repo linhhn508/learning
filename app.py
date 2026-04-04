@@ -77,6 +77,11 @@ def post(post_id):
 
 @app.route('/create', methods=('GET', 'POST'))
 def create():
+    # Generate a draft ID once when the page first loads.
+    # It is carried through the form as a hidden field so it survives
+    # a failed validation re-render, keeping uploaded images consistent.
+    draft_id = request.form.get('draft_id') or str(ObjectId())
+
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
@@ -84,15 +89,34 @@ def create():
         if not title:
             flash('Title is required!', 'danger')
         else:
+            # Use draft_id as the MongoDB _id so the post ID matches
+            # the MinIO subfolder where its images are already stored.
             collection.insert_one({
-                'title': title, 
+                '_id': ObjectId(draft_id),
+                'title': title,
                 'content': content,
                 'created': datetime.now().strftime("%Y-%m-%d %H:%M")
             })
             flash('Post created successfully!', 'success')
             return redirect(url_for('index'))
 
-    return render_template('create.html')
+    return render_template('create.html', draft_id=draft_id)
+
+
+@app.route('/discard_draft/<string:draft_id>', methods=['POST'])
+def discard_draft(draft_id):
+    # Validate before touching MinIO to block path-traversal attempts.
+    try:
+        ObjectId(draft_id)
+    except InvalidId:
+        abort(400)
+
+    # Delete every object uploaded under this draft's subfolder.
+    response = s3_client.list_objects_v2(Bucket='blog-image', Prefix=f'{draft_id}/')
+    for obj in response.get('Contents', []):
+        s3_client.delete_object(Bucket='blog-image', Key=obj['Key'])
+
+    return redirect(url_for('index'))
 
 
 @app.route('/<string:post_id>/edit', methods=('GET', 'POST'))
