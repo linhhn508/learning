@@ -9,6 +9,15 @@ from bson.errors import InvalidId
 from datetime import datetime
 import os
 
+MONGODB_HOST = os.environ["MONGODB_HOST"]
+MINIO_URL = os.environ["MINIO_URL"]
+MINIO_USR = os.environ["MINIO_USR"]
+MINIO_PWD = os.environ["MINIO_PWD"]
+# Public URL the *browser* uses to load images — may differ from MINIO_URL
+# when MinIO is on a private Docker network (e.g. http://test-minio:9000)
+# but exposed to the host on a different address (e.g. http://localhost:9000).
+MINIO_PUBLIC_URL = os.environ.get("MINIO_PUBLIC_URL", MINIO_URL)
+
 def get_post(post_id):
     # Catch InvalidId in case the user types a bad ID in the URL
     try:
@@ -24,16 +33,16 @@ def get_post(post_id):
     return post
 
 app = Flask(__name__)
-client = MongoClient('localhost', 27017)
+client = MongoClient(MONGODB_HOST)
 app.config['SECRET_KEY']= '123'
 
 db = client['blog']
 collection = db['posts']
 
 s3_client = boto3.client('s3',
-    endpoint_url='http://localhost:9000',
-    aws_access_key_id='admin',
-    aws_secret_access_key='password123',
+    endpoint_url=MINIO_URL,
+    aws_access_key_id=MINIO_USR,
+    aws_secret_access_key=MINIO_PWD,
     # addressing_style='path' is required for MinIO — without it boto3 may generate
     # virtual-hosted-style URLs (blog-image.localhost:9000) that MinIO can't route.
     config=Config(signature_version='s3v4', s3={'addressing_style': 'path'}),
@@ -147,5 +156,5 @@ def upload_image():
             ExtraArgs={'ContentType': file.content_type}
         )
 
-        image_url = f"http://localhost:9000/blog-image/{object_key}"
+        image_url = f"{MINIO_PUBLIC_URL}/blog-image/{object_key}"
         return jsonify({'location': image_url})
