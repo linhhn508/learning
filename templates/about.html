@@ -4,23 +4,109 @@
 
 {% block content %}
 <div class="row justify-content-center mt-5">
-    <div class="col-md-8 text-center">
-        <h1 class="mb-4">About FlaskBlog</h1>
-        <p class="lead">
-            Welcome to my blog! This website was built from scratch to explore full-stack development, 
-            learn the ins and outs of Flask, and prepare for modern deployment practices.
-        </p>
-        <hr class="my-4">
-        <h5 class="text-muted mb-3">Built with</h5>
-        <div class="mb-4">
-            <span class="badge badge-pill badge-primary p-2 m-1" style="font-size: 0.9rem;">Python 3.12</span>
-            <span class="badge badge-pill badge-success p-2 m-1" style="font-size: 0.9rem;">Flask</span>
-            <span class="badge badge-pill badge-warning p-2 m-1" style="font-size: 0.9rem;">MongoDB</span>
-            <span class="badge badge-pill badge-info p-2 m-1" style="font-size: 0.9rem;">Bootstrap 4</span>
-            <span class="badge badge-pill badge-secondary p-2 m-1" style="font-size: 0.9rem;">TinyMCE</span>
-            <span class="badge badge-pill badge-dark p-2 m-1" style="font-size: 0.9rem;">Docker</span>
+    <div class="col-md-8">
+        <!-- Hero section -->
+        <div class="text-center mb-5">
+            <div class="about-avatar mb-3">LH</div>
+            <h1 class="mb-3">Linh Hoang</h1>
+            <p class="lead text-muted">
+                Full-stack developer exploring web technologies, 
+                containerization, and modern deployment practices.
+            </p>
         </div>
-        <a href="{{ url_for('index') }}" class="btn btn-primary mt-3">&larr; Back to Home</a>
+
+        <!-- About the blog -->
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body p-4">
+                <h4 class="mb-3">&#128218; About This Blog</h4>
+                <p>
+                    This website was built from scratch to explore full-stack development, 
+                    learn the ins and outs of Flask, and prepare for modern deployment practices.
+                    Every feature — from image uploads to containerized deployment — was implemented hands-on.
+                </p>
+            </div>
+        </div>
+
+        <!-- Tech stack -->
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body p-4">
+                <h4 class="mb-3">&#9881; Tech Stack</h4>
+                <div class="row text-center">
+                    <div class="col-4 col-md-2 mb-3">
+                        <div class="tech-icon">&#128013;</div>
+                        <small class="d-block text-muted">Python 3.12</small>
+                    </div>
+                    <div class="col-4 col-md-2 mb-3">
+                        <div class="tech-icon">&#127760;</div>
+                        <small class="d-block text-muted">Flask</small>
+                    </div>
+                    <div class="col-4 col-md-2 mb-3">
+                        <div class="tech-icon">&#128451;</div>
+                        <small class="d-block text-muted">MongoDB</small>
+                    </div>
+                    <div class="col-4 col-md-2 mb-3">
+                        <div class="tech-icon">&#127912;</div>
+                        <small class="d-block text-muted">Bootstrap</small>
+                    </div>
+                    <div class="col-4 col-md-2 mb-3">
+                        <div class="tech-icon">&#128230;</div>
+                        <small class="d-block text-muted">MinIO</small>
+                    </div>
+                    <div class="col-4 col-md-2 mb-3">
+                        <div class="tech-icon">&#128243;</div>
+                        <small class="d-block text-muted">Docker</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Journey timeline -->
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body p-4">
+                <h4 class="mb-3">&#128640; Journey</h4>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <strong>Basic Flask App</strong>
+                            <p class="text-muted mb-0 small">Started with routes, templates, and CRUD operations</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <strong>MongoDB Integration</strong>
+                            <p class="text-muted mb-0 small">Moved from SQLite to a document-oriented database</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <strong>Rich Text Editor</strong>
+                            <p class="text-muted mb-0 small">Integrated TinyMCE with image upload support</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <strong>Object Storage</strong>
+                            <p class="text-muted mb-0 small">Migrated file uploads from local disk to MinIO (S3-compatible)</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <strong>Containerization</strong>
+                            <p class="text-muted mb-0 small">Dockerized the full stack with Docker Compose</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mb-5">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">&larr; Back to Home</a>
+        </div>
     </div>
 </div>
 {% endblock %}

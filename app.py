@@ -1,4 +1,5 @@
 import boto3
+import re
 from botocore.client import Config
 from flask import Flask, render_template, request, url_for, flash, redirect, jsonify
 from werkzeug.exceptions import abort
@@ -32,6 +33,12 @@ def get_post(post_id):
     post['id'] = str(post['_id'])
     return post
 
+
+def extract_first_image(html_content):
+    """Pull the first <img src="..."> URL from HTML content for use as a card thumbnail."""
+    match = re.search(r'<img[^>]+src=["\']([^"\']+)["\']', html_content or '')
+    return match.group(1) if match else None
+
 app = Flask(__name__)
 client = MongoClient(MONGODB_HOST)
 app.config['SECRET_KEY']= '123'
@@ -54,14 +61,19 @@ def index():
     post_collection = []
     
     search_query = request.args.get('q')
+    sort_order = request.args.get('sort', 'newest')
 
+    query_filter = {}
     if search_query:
-        posts = collection.find({"title": {"$regex": search_query, "$options": "i"}})
-    else:
-        posts = collection.find()
+        query_filter = {"title": {"$regex": search_query, "$options": "i"}}
+
+    # Sort by _id (which embeds a timestamp) — newest first by default
+    sort_direction = 1 if sort_order == 'oldest' else -1
+    posts = collection.find(query_filter).sort('_id', sort_direction)
 
     for post in posts:
         post['id'] = str(post['_id'])
+        post['thumbnail'] = extract_first_image(post.get('content', ''))
         post_collection.append(post)
 
     return render_template('index.html', posts=post_collection, search_query=search_query)
@@ -73,7 +85,23 @@ def about():
 @app.route('/<string:post_id>')
 def post(post_id):
     post = get_post(post_id)
-    return render_template('post.html', post=post)
+
+    # Find the previous and next posts (by _id order) for navigation
+    prev_post = collection.find_one(
+        {"_id": {"$lt": ObjectId(post_id)}},
+        sort=[("_id", -1)]
+    )
+    next_post = collection.find_one(
+        {"_id": {"$gt": ObjectId(post_id)}},
+        sort=[("_id", 1)]
+    )
+
+    if prev_post:
+        prev_post['id'] = str(prev_post['_id'])
+    if next_post:
+        next_post['id'] = str(next_post['_id'])
+
+    return render_template('post.html', post=post, prev_post=prev_post, next_post=next_post)
 
 @app.route('/create', methods=('GET', 'POST'))
 def create():

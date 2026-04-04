@@ -1,23 +1,32 @@
-/* Change the overall background to a soft off-white */
+/* ══════════════════════════════════════════════════
+   BASE STYLES
+   ══════════════════════════════════════════════════ */
+
 body {
     background-color: #f4f7f6;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    /* Push footer to bottom even on short pages */
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-/* Add a subtle shadow to the navigation bar */
+/* ── Navbar ── */
 .navbar {
     box-shadow: 0 2px 4px rgba(0,0,0,.08);
-    background-color: #ffffff !important; 
+    background-color: #ffffff !important;
+    transition: background-color 0.3s, box-shadow 0.3s;
 }
 
-/* Make the blog post cards elevate when you hover over them */
+.brand-icon {
+    font-size: 1.4rem;
+}
+
+/* ── Cards ── */
 .card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border-radius: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .card:hover {
@@ -25,7 +34,6 @@ body {
     box-shadow: 0 8px 20px rgba(0,0,0,.12) !important;
 }
 
-/* Custom styling for the post title links */
 .card-title a {
     color: #2c3e50 !important;
     transition: color 0.2s;
@@ -35,40 +43,63 @@ body {
     color: #3498db !important;
 }
 
+/* ── Card thumbnails ── */
+.card-img-top-wrapper {
+    height: 180px;
+    overflow: hidden;
+    background: #e9ecef;
+}
+
+.card-img-top-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-img-top-placeholder {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+    font-size: 2.5rem;
+    color: #adb5bd;
+}
+
+/* ── TinyMCE editor ── */
 .preserve-lines {
     white-space: pre-wrap;
 }
 
 .input-content {
-    min-height: 250px; /* This is roughly equal to 10 rows */
-    resize: vertical;  /* Allows the user to drag and make it taller if needed */
+    min-height: 250px;
+    resize: vertical;
 }
 
-/* ── Card fade-in animation ── */
+/* ══════════════════════════════════════════════════
+   ANIMATIONS
+   ══════════════════════════════════════════════════ */
+
 @keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(16px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
 .fade-in-card {
     animation: fadeInUp 0.4s ease both;
 }
 
-/* Stagger delay for cards 1-6 */
 .fade-in-card:nth-child(1) { animation-delay: 0.05s; }
 .fade-in-card:nth-child(2) { animation-delay: 0.10s; }
 .fade-in-card:nth-child(3) { animation-delay: 0.15s; }
-.fade-in-card:nth-child(4) { animation-delay: 0.20s; }
-.fade-in-card:nth-child(5) { animation-delay: 0.25s; }
-.fade-in-card:nth-child(6) { animation-delay: 0.30s; }
+.fade-in-card:nth-child(4) { animation-delay: 0.15s; }
+.fade-in-card:nth-child(5) { animation-delay: 0.20s; }
+.fade-in-card:nth-child(6) { animation-delay: 0.20s; }
 
-/* ── Sticky footer ── */
+/* ══════════════════════════════════════════════════
+   FOOTER
+   ══════════════════════════════════════════════════ */
+
 .site-footer {
     background-color: #ffffff;
     border-top: 1px solid #e9ecef;
@@ -76,20 +107,26 @@ body {
     font-size: 0.875rem;
     color: #6c757d;
     box-shadow: 0 -2px 4px rgba(0,0,0,.04);
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
-/* ── Empty state ── */
+/* ══════════════════════════════════════════════════
+   EMPTY STATE & MISC
+   ══════════════════════════════════════════════════ */
+
 .empty-state {
     padding: 3rem 1rem;
     color: #adb5bd;
 }
 
-/* ── Title character counter ── */
 #charCount {
     transition: color 0.2s;
 }
 
-/* ── TinyMCE image text-wrap classes (must match editor config) ── */
+/* ══════════════════════════════════════════════════
+   IMAGE FLOAT CLASSES (match TinyMCE config)
+   ══════════════════════════════════════════════════ */
+
 .img-float-left {
     float: left;
     margin: 0 1.25rem 1rem 0;
@@ -111,9 +148,221 @@ body {
     height: auto;
 }
 
-/* Ensure the post content area clears any floated images */
-.card-text::after {
+.card-text::after,
+.post-content::after {
     content: '';
     display: table;
     clear: both;
+}
+
+/* ══════════════════════════════════════════════════
+   SCROLL-TO-TOP BUTTON
+   ══════════════════════════════════════════════════ */
+
+.scroll-top-btn {
+    display: none;
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 1050;
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 50%;
+    background: #3498db;
+    color: #fff;
+    font-size: 1.3rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,.2);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.scroll-top-btn:hover {
+    background: #2980b9;
+    transform: translateY(-2px);
+}
+
+/* ══════════════════════════════════════════════════
+   ABOUT PAGE
+   ══════════════════════════════════════════════════ */
+
+.about-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3498db, #2c3e50);
+    color: #fff;
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.tech-icon {
+    font-size: 2rem;
+    margin-bottom: 0.25rem;
+}
+
+/* ── Timeline ── */
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 4px;
+    bottom: 4px;
+    width: 2px;
+    background: #dee2e6;
+}
+
+.timeline-item {
+    position: relative;
+    padding-bottom: 1.25rem;
+}
+
+.timeline-item:last-child {
+    padding-bottom: 0;
+}
+
+.timeline-dot {
+    position: absolute;
+    left: -26px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #3498db;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px #3498db;
+}
+
+.timeline-content strong {
+    font-size: 0.95rem;
+}
+
+/* ══════════════════════════════════════════════════
+   DARK MODE
+   ══════════════════════════════════════════════════ */
+
+body.dark-mode {
+    background-color: #1a1d23;
+    color: #d4d4d4;
+}
+
+body.dark-mode .navbar {
+    background-color: #22262e !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,.3);
+}
+
+body.dark-mode .navbar-brand,
+body.dark-mode .nav-link {
+    color: #d4d4d4 !important;
+}
+
+body.dark-mode .nav-link:hover {
+    color: #fff !important;
+}
+
+body.dark-mode .card {
+    background-color: #2a2e36;
+    border-color: #3a3e46;
+}
+
+body.dark-mode .card:hover {
+    box-shadow: 0 8px 20px rgba(0,0,0,.35) !important;
+}
+
+body.dark-mode .card-title a {
+    color: #e4e4e4 !important;
+}
+
+body.dark-mode .card-title a:hover {
+    color: #6cb4ee !important;
+}
+
+body.dark-mode .card-footer,
+body.dark-mode .card-body {
+    background-color: #2a2e36;
+}
+
+body.dark-mode .card-img-top-placeholder {
+    background: linear-gradient(135deg, #2a2e36 0%, #3a3e46 100%);
+}
+
+body.dark-mode .site-footer {
+    background-color: #22262e;
+    border-top-color: #3a3e46;
+    color: #888;
+}
+
+body.dark-mode .form-control {
+    background-color: #2a2e36;
+    border-color: #3a3e46;
+    color: #d4d4d4;
+}
+
+body.dark-mode .form-control:focus {
+    background-color: #32363e;
+    border-color: #3498db;
+    color: #e4e4e4;
+}
+
+body.dark-mode .dropdown-menu {
+    background-color: #2a2e36;
+    border-color: #3a3e46;
+}
+
+body.dark-mode .dropdown-item {
+    color: #d4d4d4;
+}
+
+body.dark-mode .dropdown-item:hover,
+body.dark-mode .dropdown-item.active {
+    background-color: #3a3e46;
+    color: #fff;
+}
+
+body.dark-mode .modal-content {
+    background-color: #2a2e36;
+    color: #d4d4d4;
+}
+
+body.dark-mode hr {
+    border-color: #3a3e46;
+}
+
+body.dark-mode .post-content,
+body.dark-mode .card-text {
+    color: #c0c0c0 !important;
+}
+
+body.dark-mode .text-dark {
+    color: #e4e4e4 !important;
+}
+
+body.dark-mode .text-muted {
+    color: #888 !important;
+}
+
+body.dark-mode .scroll-top-btn {
+    background: #6cb4ee;
+}
+
+body.dark-mode .timeline::before {
+    background: #3a3e46;
+}
+
+body.dark-mode .timeline-dot {
+    border-color: #2a2e36;
+}
+
+body.dark-mode .alert {
+    background-color: #2a2e36;
+    border-color: #3a3e46;
+    color: #d4d4d4;
 }

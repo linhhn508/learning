@@ -57,12 +57,15 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-md navbar-light bg-light">
-        <a class="navbar-brand" href="{{ url_for('index')}}">Linh Hoang</a>
+        <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index')}}">
+            <span class="brand-icon mr-2">&#9998;</span>
+            <span>Linh Hoang</span>
+        </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav mr-auto">
             <li class="nav-item {% if request.endpoint == 'index' %}active{% endif %}">
                 <a class="nav-link" href="{{ url_for('index') }}">Home</a>
             </li>
@@ -73,6 +76,21 @@
                 <a class="nav-link" href="{{ url_for('create') }}">New Post</a>
             </li>
             </ul>
+
+            <!-- Navbar search (compact) -->
+            <form class="form-inline my-2 my-lg-0" method="GET" action="{{ url_for('index') }}">
+                <div class="input-group input-group-sm">
+                    <input class="form-control" type="search" name="q" placeholder="Search..." value="{{ request.args.get('q', '') }}" aria-label="Search">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-primary" type="submit">&#128269;</button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Dark mode toggle -->
+            <button id="darkModeToggle" class="btn btn-sm btn-outline-secondary ml-2" title="Toggle dark mode">
+                <span id="darkModeIcon">&#127769;</span>
+            </button>
         </div>
     </nav>
     <div class="flex-grow-1">
@@ -123,7 +141,40 @@
                     $(this).remove(); 
                 });
             }, 5000);
+
+            // ── Dark mode toggle ──
+            const darkToggle = document.getElementById('darkModeToggle');
+            const darkIcon = document.getElementById('darkModeIcon');
+
+            function applyDarkMode(enabled) {
+                document.body.classList.toggle('dark-mode', enabled);
+                darkIcon.textContent = enabled ? '\u2600\uFE0F' : '\uD83C\uDF19';
+                localStorage.setItem('darkMode', enabled ? '1' : '0');
+            }
+
+            // Restore preference from localStorage
+            applyDarkMode(localStorage.getItem('darkMode') === '1');
+
+            darkToggle.addEventListener('click', function() {
+                applyDarkMode(!document.body.classList.contains('dark-mode'));
+            });
+
+            // ── Scroll-to-top button ──
+            const scrollBtn = document.getElementById('scrollTopBtn');
+            $(window).on('scroll', function() {
+                if ($(this).scrollTop() > 300) {
+                    $(scrollBtn).fadeIn(300);
+                } else {
+                    $(scrollBtn).fadeOut(300);
+                }
+            });
+            $(scrollBtn).on('click', function() {
+                $('html, body').animate({ scrollTop: 0 }, 400);
+            });
         });
     </script>
+
+    <!-- Scroll-to-top button -->
+    <button id="scrollTopBtn" class="scroll-top-btn" title="Back to top">&#8679;</button>
   </body>
 </html>

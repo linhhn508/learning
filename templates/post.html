@@ -20,22 +20,45 @@
             
             <div class="mb-4">
                 {% if post['created'] %}
-                    <span class="badge badge-info mr-1">{{ post['created'] }}</span>
+                    <span class="text-muted small mr-3">&#128197; {{ post['created'] }}</span>
                 {% else %}
                     <span class="badge badge-secondary mr-1">No Date</span>
                 {% endif %}
-                <span class="badge badge-light text-muted border">&#128214; {{ read_time }} min read</span>
+                <span class="text-muted small mr-3">&#128214; {{ read_time }} min read</span>
+                <span class="text-muted small">&#128221; {{ word_count }} words</span>
             </div>
             
             <hr>
             
-            <div class="card-text mt-4" style="font-size: 1.15rem; line-height: 1.7; color: #444;">
+            <div class="card-text mt-4 post-content" style="font-size: 1.15rem; line-height: 1.7; color: #444;">
                 <div>{{ post['content'] | safe }}</div>
+            </div>
+
+            <!-- Share buttons -->
+            <hr class="mt-5">
+            <div class="d-flex align-items-center">
+                <span class="text-muted mr-3 small">Share this post:</span>
+                <a href="#" class="btn btn-sm btn-outline-primary mr-2 share-btn" data-platform="twitter" title="Share on Twitter">&#120143;</a>
+                <a href="#" class="btn btn-sm btn-outline-primary mr-2 share-btn" data-platform="linkedin" title="Share on LinkedIn">in</a>
+                <button class="btn btn-sm btn-outline-secondary share-btn" data-platform="copy" title="Copy link">&#128279; Copy link</button>
             </div>
         </div>
         
+        <!-- Previous / Next navigation -->
         <div class="card-footer bg-white border-0 pb-4 px-5">
-            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">&larr; Back to Home</a>
+            <div class="d-flex justify-content-between align-items-center">
+                {% if prev_post %}
+                    <a href="{{ url_for('post', post_id=prev_post['id']) }}" class="btn btn-outline-secondary btn-sm">&larr; {{ prev_post['title'] | truncate(30) }}</a>
+                {% else %}
+                    <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-sm">&larr; Back to Home</a>
+                {% endif %}
+
+                {% if next_post %}
+                    <a href="{{ url_for('post', post_id=next_post['id']) }}" class="btn btn-outline-secondary btn-sm">{{ next_post['title'] | truncate(30) }} &rarr;</a>
+                {% else %}
+                    <span></span>
+                {% endif %}
+            </div>
         </div>
     </div>
 
@@ -61,4 +84,26 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Share functionality
+        document.querySelectorAll('.share-btn').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                var url = window.location.href;
+                var title = {{ post['title'] | tojson }};
+                var platform = this.dataset.platform;
+                if (platform === 'twitter') {
+                    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(title) + '&url=' + encodeURIComponent(url), '_blank');
+                } else if (platform === 'linkedin') {
+                    window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(url), '_blank');
+                } else if (platform === 'copy') {
+                    navigator.clipboard.writeText(url).then(function() {
+                        btn.textContent = '\u2705 Copied!';
+                        setTimeout(function() { btn.innerHTML = '&#128279; Copy link'; }, 2000);
+                    });
+                }
+            });
+        });
+    </script>
 {% endblock %}
