@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 
+{# Route all image uploads for this post into its own subfolder #}
+{% block tinymce_upload_url %}/upload_image?post_id={{ post['id'] }}{% endblock %}
+
 {% block content %}
 <h1>{% block title %} Edit Post "{{post['title']}}" {% endblock %}</h1>
 

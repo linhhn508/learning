@@ -88,3 +88,32 @@ body {
 #charCount {
     transition: color 0.2s;
 }
+
+/* ── TinyMCE image text-wrap classes (must match editor config) ── */
+.img-float-left {
+    float: left;
+    margin: 0 1.25rem 1rem 0;
+    max-width: 50%;
+    height: auto;
+}
+
+.img-float-right {
+    float: right;
+    margin: 0 0 1rem 1.25rem;
+    max-width: 50%;
+    height: auto;
+}
+
+.img-center {
+    display: block;
+    margin: 1rem auto;
+    max-width: 100%;
+    height: auto;
+}
+
+/* Ensure the post content area clears any floated images */
+.card-text::after {
+    content: '';
+    display: table;
+    clear: both;
+}

@@ -11,15 +11,45 @@
     <script src="{{ url_for('static', filename='js/tinymce/tinymce.min.js') }}" referrerpolicy="origin" crossorigin="anonymous"></script>
     <script>
       tinymce.init({
-        selector: '.input-content', 
+        selector: '.input-content',
         plugins: 'image link lists',
         toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright | bullist numlist | link image',
-        images_upload_url: '/upload_image',
+
+        // Upload URL — child templates can override this block to pass a post_id
+        images_upload_url: '{% block tinymce_upload_url %}/upload_image{% endblock %}',
         automatic_uploads: true,
         file_picker_types: 'image',
+
+        // IMPORTANT: Keep URLs as absolute paths.
+        // TinyMCE's default convert_urls:true would strip the leading '/'
+        // turning '/static/uploads/file.png' into 'static/uploads/file.png'.
+        // That relative URL resolves against the current page (e.g. /{post_id}/edit)
+        // producing a 404 like /{post_id}/static/uploads/file.png.
+        convert_urls: false,
+
         license_key: 'gpl',
         branding: false,
-        promotion: false 
+        promotion: false,
+
+        // Enable the Advanced tab in the image dialog
+        image_advtab: true,
+
+        // Predefined wrap styles shown as a "Style" dropdown in the Insert Image dialog
+        image_class_list: [
+          { title: 'None',                           value: '' },
+          { title: 'Float Left  (text wraps right)', value: 'img-float-left' },
+          { title: 'Float Right (text wraps left)',  value: 'img-float-right' },
+          { title: 'Center (no wrap)',               value: 'img-center' }
+        ],
+
+        // Apply the same classes inside the editor canvas so the author sees wrapping live
+        content_style: [
+          'body { font-family: Segoe UI, sans-serif; font-size: 1rem; color: #444; }',
+          'img { max-width: 100%; height: auto; }',
+          '.img-float-left  { float: left;  margin: 0 1.25rem 1rem 0; }',
+          '.img-float-right { float: right; margin: 0 0 1rem 1.25rem; }',
+          '.img-center      { display: block; margin: 1rem auto; }'
+        ].join(' ')
       });
     </script>
 
@@ -72,9 +102,6 @@
                     <span class="badge badge-secondary ml-1">Flask</span>
                     <span class="badge badge-secondary ml-1">MongoDB</span>
                     <span class="badge badge-secondary ml-1">Bootstrap 4</span>
-                </div>
-                <div class="col-md-6 text-center text-md-right mt-2 mt-md-0">
-                    <a href="{{ url_for('create') }}" class="btn btn-sm btn-outline-primary">+ New Post</a>
                 </div>
             </div>
         </div>

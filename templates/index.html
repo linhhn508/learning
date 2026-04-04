@@ -46,10 +46,6 @@
                         {{ post['content'] | striptags | truncate(130) }}
                     </p>
                 </div>
-                <div class="card-footer bg-white border-0">
-                    <a href="{{ url_for('post', post_id=post['id']) }}" class="btn btn-outline-primary btn-sm">Read More</a>
-                    <a href="{{ url_for('edit', post_id=post['id']) }}" class="btn btn-outline-warning btn-sm">Edit</a>
-                </div>
             </div>
         </div>
         {% else %}

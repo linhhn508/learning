@@ -104,28 +104,40 @@ def delete(post_id):
     return redirect(url_for('index'))
 
 
-# --- NEW: Image Upload Route ---
+# --- Image Upload Route ---
 @app.route('/upload_image', methods=['POST'])
 def upload_image():
     # 1. Check if a file was sent
     if 'file' not in request.files:
         return jsonify({'error': 'No file part'}), 400
-    
+
     file = request.files['file']
-    
+
     if file.filename == '':
         return jsonify({'error': 'No selected file'}), 400
-        
+
     if file:
-        # 2. Sanitize the filename so it is safe for the filesystem
+        # 2. Sanitize the filename to prevent path traversal
         filename = secure_filename(file.filename)
-        
-        # 3. Save the image to static/uploads/
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(filepath)
-        
-        # 4. Generate the URL to access the image
-        image_url = url_for('static', filename=f'uploads/{filename}')
-        
-        # 5. TinyMCE strictly requires the response to be in this exact JSON format
+
+        # 3. Optionally scope uploads to a per-post subfolder.
+        #    Validate post_id is a real ObjectId to block path-traversal attempts.
+        post_id = request.args.get('post_id', '').strip()
+        try:
+            if post_id:
+                ObjectId(post_id)  # raises InvalidId if not a valid 24-hex string
+                subfolder = os.path.join(app.config['UPLOAD_FOLDER'], post_id)
+                static_path = f'uploads/{post_id}/{filename}'
+            else:
+                subfolder = app.config['UPLOAD_FOLDER']
+                static_path = f'uploads/{filename}'
+        except InvalidId:
+            return jsonify({'error': 'Invalid post_id'}), 400
+
+        # 4. Create the subfolder if needed and save the file
+        os.makedirs(subfolder, exist_ok=True)
+        file.save(os.path.join(subfolder, filename))
+
+        # 5. Return an absolute URL path so TinyMCE (convert_urls:false) stores it correctly
+        image_url = url_for('static', filename=static_path)
         return jsonify({'location': image_url})
