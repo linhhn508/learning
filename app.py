@@ -27,11 +27,6 @@ app = Flask(__name__)
 client = MongoClient('localhost', 27017)
 app.config['SECRET_KEY']= '123'
 
-# --- NEW: Configure Upload Folder ---
-UPLOAD_FOLDER = os.path.join('static', 'uploads')
-os.makedirs(UPLOAD_FOLDER, exist_ok=True) # Creates the folder if it doesn't exist
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
 db = client['blog']
 collection = db['posts']
 
