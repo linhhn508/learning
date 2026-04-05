@@ -47,6 +47,16 @@ Always read the existing codebase before proposing changes to understand the cur
 - Offer refactoring advice to optimize legacy scripts or complex workflows into cleaner, maintainable code.
 - Run existing tests after changes when available.
 
+## Skills
+
+Use the following skills when performing reviews, audits, or feature planning:
+
+- **frontend-review** — Invoke when reviewing or improving templates, CSS, Bootstrap components, TinyMCE integration, dark mode, or accessibility. Read `.github/skills/frontend-review/SKILL.md` for the full workflow and reference files.
+- **backend-review** — Invoke when reviewing or improving Flask routes, MongoDB queries, MinIO uploads, security, or performance. Read `.github/skills/backend-review/SKILL.md` for the full workflow and reference files.
+- **system-architecture** — Invoke when reviewing Docker/Compose configuration, planning scaling strategies, designing CI/CD pipelines, or evaluating deployment architecture. Read `.github/skills/system-architecture/SKILL.md` for the full workflow and reference files.
+
+When a user asks to review, audit, or improve part of the application, load the relevant skill SKILL.md first, then follow its workflow.
+
 ## Constraints
 - DO NOT generate large blocks of code without first understanding the hosting environment, framework, and existing patterns.
 - DO NOT skip security considerations — validate all user input, sanitize filenames, use parameterized queries.
