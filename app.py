@@ -66,9 +66,11 @@ def index():
     search_query = request.args.get('q')
     sort_order = request.args.get('sort', 'newest')
 
+    collection.create_index([("title", "text"), ("content", "text")])
+
     query_filter = {}
     if search_query:
-        query_filter = {"title": {"$regex": search_query, "$options": "i"}}
+        query_filter = { "$text": { "$search": search_query } }
 
     # Sort by _id (which embeds a timestamp) — newest first by default
     sort_direction = 1 if sort_order == 'oldest' else -1
