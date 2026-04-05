@@ -25,7 +25,8 @@
                     <span class="badge badge-secondary mr-1">No Date</span>
                 {% endif %}
                 <span class="text-muted small mr-3">&#128214; {{ read_time }} min read</span>
-                <span class="text-muted small">&#128221; {{ word_count }} words</span>
+                <span class="text-muted small mr-3">&#128221; {{ word_count }} words</span>
+                <span class="text-muted small">&#128065; {{ post.get('views', 1) }} views</span>
             </div>
             
             <hr>

@@ -48,6 +48,7 @@ app.config['SECRET_KEY']= '123'
 
 db = client['blog']
 collection = db['posts']
+stats_col = db['stats']
 
 s3_client = boto3.client('s3',
     endpoint_url=MINIO_URL,
@@ -58,6 +59,39 @@ s3_client = boto3.client('s3',
     config=Config(signature_version='s3v4', s3={'addressing_style': 'path'}),
     region_name='us-east-1'
 )
+
+@app.after_request
+def track_page_view(response):
+    """Count every HTML page view for the site-wide footer stats."""
+    if request.method == 'GET' and response.content_type.startswith('text/html'):
+        today_str = datetime.now().strftime("%Y-%m-%d")
+        stats_col.update_one(
+            {"_id": "site"},
+            [{"$set": {
+                "total": {"$add": [{"$ifNull": ["$total", 0]}, 1]},
+                "today": {
+                    "$cond": {
+                        "if": {"$eq": [{"$ifNull": ["$today_date", ""]}, today_str]},
+                        "then": {"$add": [{"$ifNull": ["$today", 0]}, 1]},
+                        "else": 1
+                    }
+                },
+                "today_date": today_str
+            }}],
+            upsert=True
+        )
+    return response
+
+
+@app.context_processor
+def inject_site_stats():
+    """Make site visit counters available in every template."""
+    stats = stats_col.find_one({"_id": "site"}) or {}
+    return {
+        "site_total": stats.get("total", 0),
+        "site_today": stats.get("today", 0)
+    }
+
 
 @app.route('/')
 def index():
@@ -89,6 +123,12 @@ def about():
 
 @app.route('/<string:post_id>')
 def post(post_id):
+    # Increment per-post view counter before fetching so the template sees the updated value
+    try:
+        collection.update_one({"_id": ObjectId(post_id)}, {"$inc": {"views": 1}})
+    except InvalidId:
+        abort(404)
+
     post = get_post(post_id)
 
     # Find the previous and next posts (by _id order) for navigation
