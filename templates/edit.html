@@ -4,42 +4,44 @@
 {% block tinymce_upload_url %}/upload_image?post_id={{ post['id'] }}{% endblock %}
 
 {% block content %}
-<h1>{% block title %} Edit Post "{{post['title']}}" {% endblock %}</h1>
+<div class="page-header mb-4">
+    <h1>{% block title %} Edit Post "{{post['title']}}" {% endblock %}</h1>
+</div>
 
-<form method="post">
-    <div class="container">
+<div class="form-card fade-in-card" style="animation-delay:0s">
+    <form method="post">
         <div class="row">
-            <div class="col-10 form-group">
-                <label for="title">Title</label>
+            <div class="col-md-9 form-group">
+                <label for="titleInput">Title</label>
                 <input type="text" id="titleInput" name="title"
                 placeholder="Post title" class="form-control"
                 value="{{ post['title'] }}" maxlength="120">
-                    <small class="form-text text-muted text-right">
-                        <span id="charCount">0</span> / 120
-                    </small>
-                </div>
-            <div class="col form-group">
-                <label for="tag">Tag</label>
+                <small class="form-text text-right" style="color: var(--text-muted);">
+                    <span id="charCount">0</span> / 120
+                </small>
+            </div>
+            <div class="col-md-3 form-group">
+                <label for="tagInput">Tag</label>
                 <input type="text" id="tagInput" name="tag"
                 placeholder="Post tag" class="form-control"
                 value="{{ post['tag'] }}">
             </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        <label for="content">Content</label>
-        <textarea name="content" placeholder="Post content"
-                  class="form-control input-content">{{ post['content'] }}</textarea>
-    </div>
-    <div class="form-group d-flex align-items-center">
-        <button type="submit" class="btn btn-primary mr-2">&#10003; Save Changes</button>
-        <a href="{{ url_for('post', post_id=post['id']) }}" class="btn btn-outline-secondary mr-auto">&#8592; Cancel</a>
-        <button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#deleteModal">
-            &#128465; Delete Post
-        </button>
-    </div>
-</form>
+        <div class="form-group">
+            <label for="content">Content</label>
+            <textarea name="content" placeholder="Post content"
+                      class="form-control input-content">{{ post['content'] }}</textarea>
+        </div>
+        <div class="form-group d-flex align-items-center">
+            <button type="submit" class="btn btn-gradient mr-2">&#10003; Save Changes</button>
+            <a href="{{ url_for('post', post_id=post['id']) }}" class="btn btn-glass mr-auto">&#8592; Cancel</a>
+            <button type="button" class="btn btn-pill btn-outline-danger btn-sm" data-toggle="modal" data-target="#deleteModal">
+                &#128465; Delete Post
+            </button>
+        </div>
+    </form>
+</div>
 
 <!-- Delete Confirmation Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -55,9 +57,9 @@
                 Are you sure you want to permanently delete <strong>"{{ post['title'] }}"</strong>? This action cannot be undone.
             </div>
             <div class="modal-footer border-0">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-secondary btn-pill" data-dismiss="modal">Cancel</button>
                 <form action="{{ url_for('delete', post_id=post['id']) }}" method="POST" class="d-inline">
-                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                    <button type="submit" class="btn btn-danger btn-pill">Yes, Delete</button>
                 </form>
             </div>
         </div>

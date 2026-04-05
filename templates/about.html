@@ -6,20 +6,20 @@
 <div class="row justify-content-center mt-5">
     <div class="col-md-8">
         <!-- Hero section -->
-        <div class="text-center mb-5">
+        <div class="text-center mb-5 fade-in-card" style="animation-delay:0s">
             <div class="about-avatar mb-3">LH</div>
-            <h1 class="mb-3">Linh Hoang</h1>
-            <p class="lead text-muted">
+            <h1 class="mb-2" style="font-weight:800; letter-spacing:-0.02em;">Linh Hoang</h1>
+            <p class="lead" style="color: var(--text-secondary);">
                 Full-stack developer exploring web technologies, 
                 containerization, and modern deployment practices.
             </p>
         </div>
 
         <!-- About the blog -->
-        <div class="card shadow-sm border-0 mb-4">
+        <div class="card mb-4 fade-in-card" style="animation-delay:0.06s">
             <div class="card-body p-4">
                 <h4 class="mb-3">&#128218; About This Blog</h4>
-                <p>
+                <p style="color: var(--text-secondary); margin-bottom:0;">
                     This website was built from scratch to explore full-stack development, 
                     learn the ins and outs of Flask, and prepare for modern deployment practices.
                     Every feature — from image uploads to containerized deployment — was implemented hands-on.
@@ -28,40 +28,52 @@
         </div>
 
         <!-- Tech stack -->
-        <div class="card shadow-sm border-0 mb-4">
+        <div class="card mb-4 fade-in-card" style="animation-delay:0.12s">
             <div class="card-body p-4">
                 <h4 class="mb-3">&#9881; Tech Stack</h4>
                 <div class="row text-center">
                     <div class="col-4 col-md-2 mb-3">
-                        <div class="tech-icon">&#128013;</div>
-                        <small class="d-block text-muted">Python 3.12</small>
+                        <div class="tech-item">
+                            <div class="tech-icon">&#128013;</div>
+                            <small class="d-block" style="color: var(--text-muted);">Python 3.12</small>
+                        </div>
                     </div>
                     <div class="col-4 col-md-2 mb-3">
-                        <div class="tech-icon">&#127760;</div>
-                        <small class="d-block text-muted">Flask</small>
+                        <div class="tech-item">
+                            <div class="tech-icon">&#127760;</div>
+                            <small class="d-block" style="color: var(--text-muted);">Flask</small>
+                        </div>
                     </div>
                     <div class="col-4 col-md-2 mb-3">
-                        <div class="tech-icon">&#128451;</div>
-                        <small class="d-block text-muted">MongoDB</small>
+                        <div class="tech-item">
+                            <div class="tech-icon">&#128451;</div>
+                            <small class="d-block" style="color: var(--text-muted);">MongoDB</small>
+                        </div>
                     </div>
                     <div class="col-4 col-md-2 mb-3">
-                        <div class="tech-icon">&#127912;</div>
-                        <small class="d-block text-muted">Bootstrap</small>
+                        <div class="tech-item">
+                            <div class="tech-icon">&#127912;</div>
+                            <small class="d-block" style="color: var(--text-muted);">Bootstrap</small>
+                        </div>
                     </div>
                     <div class="col-4 col-md-2 mb-3">
-                        <div class="tech-icon">&#128230;</div>
-                        <small class="d-block text-muted">MinIO</small>
+                        <div class="tech-item">
+                            <div class="tech-icon">&#128230;</div>
+                            <small class="d-block" style="color: var(--text-muted);">MinIO</small>
+                        </div>
                     </div>
                     <div class="col-4 col-md-2 mb-3">
-                        <div class="tech-icon">&#128243;</div>
-                        <small class="d-block text-muted">Docker</small>
+                        <div class="tech-item">
+                            <div class="tech-icon">&#128243;</div>
+                            <small class="d-block" style="color: var(--text-muted);">Docker</small>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Journey timeline -->
-        <div class="card shadow-sm border-0 mb-4">
+        <div class="card mb-4 fade-in-card" style="animation-delay:0.18s">
             <div class="card-body p-4">
                 <h4 class="mb-3">&#128640; Journey</h4>
                 <div class="timeline">
@@ -69,43 +81,43 @@
                         <div class="timeline-dot"></div>
                         <div class="timeline-content">
                             <strong>Basic Flask App</strong>
-                            <p class="text-muted mb-0 small">Started with routes, templates, and CRUD operations</p>
+                            <p class="mb-0 small" style="color: var(--text-muted);">Started with routes, templates, and CRUD operations</p>
                         </div>
                     </div>
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
                         <div class="timeline-content">
                             <strong>MongoDB Integration</strong>
-                            <p class="text-muted mb-0 small">Moved from SQLite to a document-oriented database</p>
+                            <p class="mb-0 small" style="color: var(--text-muted);">Moved from SQLite to a document-oriented database</p>
                         </div>
                     </div>
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
                         <div class="timeline-content">
                             <strong>Rich Text Editor</strong>
-                            <p class="text-muted mb-0 small">Integrated TinyMCE with image upload support</p>
+                            <p class="mb-0 small" style="color: var(--text-muted);">Integrated TinyMCE with image upload support</p>
                         </div>
                     </div>
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
                         <div class="timeline-content">
                             <strong>Object Storage</strong>
-                            <p class="text-muted mb-0 small">Migrated file uploads from local disk to MinIO (S3-compatible)</p>
+                            <p class="mb-0 small" style="color: var(--text-muted);">Migrated file uploads from local disk to MinIO (S3-compatible)</p>
                         </div>
                     </div>
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
                         <div class="timeline-content">
                             <strong>Containerization</strong>
-                            <p class="text-muted mb-0 small">Dockerized the full stack with Docker Compose</p>
+                            <p class="mb-0 small" style="color: var(--text-muted);">Dockerized the full stack with Docker Compose</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="text-center mb-5">
-            <a href="{{ url_for('index') }}" class="btn btn-primary">&larr; Back to Home</a>
+        <div class="text-center mb-5 fade-in-card" style="animation-delay:0.24s">
+            <a href="{{ url_for('index') }}" class="btn btn-gradient">&larr; Back to Home</a>
         </div>
     </div>
 </div>

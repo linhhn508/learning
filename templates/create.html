@@ -4,44 +4,46 @@
 {% block tinymce_upload_url %}/upload_image?post_id={{ draft_id }}{% endblock %}
 
 {% block content %}
-<h1>{% block title %} Create a New Post {% endblock %}</h1>
+<div class="page-header mb-4">
+    <h1>{% block title %} Create a New Post {% endblock %}</h1>
+</div>
 
-<form id="post-form" method="post">
-    {# Carry draft_id through re-renders caused by validation failures #}
-    <input type="hidden" name="draft_id" value="{{ draft_id }}">
+<div class="form-card fade-in-card" style="animation-delay:0s">
+    <form id="post-form" method="post">
+        {# Carry draft_id through re-renders caused by validation failures #}
+        <input type="hidden" name="draft_id" value="{{ draft_id }}">
 
-    <div class="container">
         <div class="row">
-            <div class="col-10 form-group">
-                <label for="title">Title</label>
+            <div class="col-md-9 form-group">
+                <label for="titleInput">Title</label>
                 <input type="text" id="titleInput" name="title"
                 placeholder="Post title" class="form-control"
                 value="{{ request.form['title'] }}" maxlength="120">
-                    <small class="form-text text-muted text-right">
-                        <span id="charCount">0</span> / 120
-                    </small>
-                </div>
-            <div class="col form-group">
-                <label for="tag">Tag</label>
+                <small class="form-text text-right" style="color: var(--text-muted);">
+                    <span id="charCount">0</span> / 120
+                </small>
+            </div>
+            <div class="col-md-3 form-group">
+                <label for="tagInput">Tag</label>
                 <input type="text" id="tagInput" name="tag"
                 placeholder="Post tag" class="form-control"
                 value="{{ request.form['tag'] }}">
             </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        <label for="content">Content</label>
-        <textarea name="content" 
-              placeholder="Write your amazing post here..."
-              class="form-control input-content">{{ request.form['content'] }}</textarea>
-    </div>
-    <div class="form-group d-flex">
-        <button type="submit" class="btn btn-primary mr-2">&#10003; Publish Post</button>
-        {# Cancel submits the discard form, which deletes the draft's MinIO folder #}
-        <button type="submit" form="discard-form" class="btn btn-outline-secondary">&#8592; Cancel</button>
-    </div>
-</form>
+        <div class="form-group">
+            <label for="content">Content</label>
+            <textarea name="content" 
+                  placeholder="Write your amazing post here..."
+                  class="form-control input-content">{{ request.form['content'] }}</textarea>
+        </div>
+        <div class="form-group d-flex">
+            <button type="submit" class="btn btn-gradient mr-2">&#10003; Publish Post</button>
+            {# Cancel submits the discard form, which deletes the draft's MinIO folder #}
+            <button type="submit" form="discard-form" class="btn btn-glass">&#8592; Cancel</button>
+        </div>
+    </form>
+</div>
 
 {# Separate form so the Cancel button can POST to a different URL #}
 <form id="discard-form" action="{{ url_for('discard_draft', draft_id=draft_id) }}" method="POST"></form>

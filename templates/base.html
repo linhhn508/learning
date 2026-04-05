@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -112,17 +113,17 @@
       </div>
     </div>
 
-    <footer class="site-footer mt-auto">
+    <footer class="site-footer">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-6 text-center text-md-left">
-                    <span class="text-muted">&copy; 2026 Linh Hoang &mdash; Built with</span>
-                    <span class="badge badge-secondary ml-1">Flask</span>
-                    <span class="badge badge-secondary ml-1">MongoDB</span>
-                    <span class="badge badge-secondary ml-1">Bootstrap 4</span>
+                    <span>&copy; 2026 Linh Hoang &mdash; Built with</span>
+                    <span class="footer-badge">Flask</span>
+                    <span class="footer-badge">MongoDB</span>
+                    <span class="footer-badge">Bootstrap</span>
                 </div>
                 <div class="col-md-6 text-center text-md-right mt-2 mt-md-0">
-                    <small class="text-muted">&#128065; {{ site_today }} visits today &nbsp;&middot;&nbsp; {{ site_total }} total</small>
+                    <span class="footer-stats">&#128065; {{ site_today }} today &middot; {{ site_total }} total</span>
                 </div>
             </div>
         </div>

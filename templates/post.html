@@ -6,56 +6,59 @@
 {% set word_count = post['content'] | striptags | wordcount %}
 {% set read_time = [((word_count / 200) | round(0, 'ceil') | int), 1] | max %}
 
-    <div class="card shadow-sm border-0 mt-4">
-        <div class="card-body p-5">
+    <div class="post-hero mt-4 fade-in-card" style="animation-delay:0s">
+        <div class="p-4 p-md-5">
+            <!-- Title + actions row -->
             <div class="d-flex justify-content-between align-items-start mb-3">
-                <h1 class="card-title text-dark mb-0">{{ post['title'] }}</h1>
-                <div class="ml-3 d-flex flex-column align-items-end" style="flex-shrink: 0;">
-                    <a href="{{ url_for('edit', post_id=post['id']) }}" class="btn btn-outline-warning btn-sm mb-1">&#9998; Edit</a>
-                    <button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#deleteModal">
+                <h1 class="post-title mb-0">{{ post['title'] }}</h1>
+                <div class="post-actions ml-3 d-flex flex-column align-items-end" style="flex-shrink: 0;">
+                    <a href="{{ url_for('edit', post_id=post['id']) }}" class="btn btn-glass btn-sm mb-1">&#9998; Edit</a>
+                    <button type="button" class="btn btn-pill btn-outline-danger btn-sm" data-toggle="modal" data-target="#deleteModal">
                         &#128465; Delete
                     </button>
                 </div>
             </div>
             
-            <div class="mb-4">
+            <!-- Meta pills -->
+            <div class="post-meta mb-4">
                 {% if post['created'] %}
-                    <span class="text-muted small mr-3">&#128197; {{ post['created'] }}</span>
-                {% else %}
-                    <span class="badge badge-secondary mr-1">No Date</span>
+                    <span class="post-meta-item">&#128197; {{ post['created'] }}</span>
                 {% endif %}
-                <span class="text-muted small mr-3">&#128214; {{ read_time }} min read</span>
-                <span class="text-muted small mr-3">&#128221; {{ word_count }} words</span>
-                <span class="text-muted small">&#128065; {{ post.get('views', 1) }} views</span>
+                {% if post.get('tag') %}
+                    <span class="tag-pill" style="font-size:0.78rem; padding:0.3rem 0.7rem;">{{ post['tag'] }}</span>
+                {% endif %}
+                <span class="post-meta-item">&#128214; {{ read_time }} min read</span>
+                <span class="post-meta-item">&#128221; {{ word_count }} words</span>
+                <span class="post-meta-item">&#128065; {{ post.get('views', 1) }} views</span>
             </div>
             
-            <hr>
+            <hr style="border-color: var(--border-color);">
             
-            <div class="card-text mt-4 post-content" style="font-size: 1.15rem; line-height: 1.7; color: #444;">
+            <div class="post-content mt-4">
                 <div>{{ post['content'] | safe }}</div>
             </div>
 
             <!-- Share buttons -->
-            <hr class="mt-5">
-            <div class="d-flex align-items-center">
-                <span class="text-muted mr-3 small">Share this post:</span>
-                <a href="#" class="btn btn-sm btn-outline-primary mr-2 share-btn" data-platform="twitter" title="Share on Twitter">&#120143;</a>
-                <a href="#" class="btn btn-sm btn-outline-primary mr-2 share-btn" data-platform="linkedin" title="Share on LinkedIn">in</a>
-                <button class="btn btn-sm btn-outline-secondary share-btn" data-platform="copy" title="Copy link">&#128279; Copy link</button>
+            <hr class="mt-5" style="border-color: var(--border-color);">
+            <div class="share-section">
+                <span class="text-muted small">Share:</span>
+                <a href="#" class="btn btn-sm btn-glass share-btn" data-platform="twitter" title="Share on Twitter">&#120143; Twitter</a>
+                <a href="#" class="btn btn-sm btn-glass share-btn" data-platform="linkedin" title="Share on LinkedIn">in LinkedIn</a>
+                <button class="btn btn-sm btn-glass share-btn" data-platform="copy" title="Copy link">&#128279; Copy link</button>
             </div>
         </div>
         
         <!-- Previous / Next navigation -->
-        <div class="card-footer bg-white border-0 pb-4 px-5">
+        <div class="px-4 px-md-5 pb-4">
             <div class="d-flex justify-content-between align-items-center">
                 {% if prev_post %}
-                    <a href="{{ url_for('post', post_id=prev_post['id']) }}" class="btn btn-outline-secondary btn-sm">&larr; {{ prev_post['title'] | truncate(30) }}</a>
+                    <a href="{{ url_for('post', post_id=prev_post['id']) }}" class="post-nav-link prev">&larr; {{ prev_post['title'] | truncate(30) }}</a>
                 {% else %}
-                    <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-sm">&larr; Back to Home</a>
+                    <a href="{{ url_for('index') }}" class="post-nav-link prev">&larr; Back to Home</a>
                 {% endif %}
 
                 {% if next_post %}
-                    <a href="{{ url_for('post', post_id=next_post['id']) }}" class="btn btn-outline-secondary btn-sm">{{ next_post['title'] | truncate(30) }} &rarr;</a>
+                    <a href="{{ url_for('post', post_id=next_post['id']) }}" class="post-nav-link">{{ next_post['title'] | truncate(30) }} &rarr;</a>
                 {% else %}
                     <span></span>
                 {% endif %}
@@ -77,9 +80,9 @@
                     Are you sure you want to permanently delete <strong>"{{ post['title'] }}"</strong>? This action cannot be undone.
                 </div>
                 <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary btn-pill" data-dismiss="modal">Cancel</button>
                     <form action="{{ url_for('delete', post_id=post['id']) }}" method="POST" class="d-inline">
-                        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                        <button type="submit" class="btn btn-danger btn-pill">Yes, Delete</button>
                     </form>
                 </div>
             </div>
