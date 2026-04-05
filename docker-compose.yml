@@ -1,7 +1,7 @@
 services:
 
   nginx:
-    image: nginx:latest
+    image: nginx:1.27-alpine
     ports:
       - "8000:80"
     volumes:
@@ -22,16 +22,25 @@ services:
       MINIO_USR: ${MINIO_USR}
       MINIO_PWD: ${MINIO_PWD}
     depends_on:
-      - mongo
-      - minio
+      minio:
+          condition: service_healthy
+      mongo:
+          condition: service_healthy
 
   mongo:
-    image: mongo:7.0.32-rc1
+    image: mongo:7.0
     # volumes:
     #   - mongo_data:/data/db
     # Uncomment to access MongoDB from host (e.g. Compass):
     # ports:
     #   - "27017:27017"
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
 
   minio:
     image: minio/minio
