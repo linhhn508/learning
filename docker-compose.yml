@@ -5,21 +5,21 @@ services:
     ports:
       - "8000:5000"
     environment:
-      MONGODB_HOST: mongo
-      MINIO_URL: http://minio:9000
+      MONGODB_HOST: ${MONGODB_HOST}
+      MINIO_URL: ${MINIO_URL}
       # MINIO_PUBLIC_URL is the address the *browser* uses to load images.
       # Must be reachable from the host machine, not from inside Docker.
-      MINIO_PUBLIC_URL: http://localhost:9000
-      MINIO_USR: admin
-      MINIO_PWD: password123
+      MINIO_PUBLIC_URL: ${MINIO_PUBLIC_URL}
+      MINIO_USR: ${MINIO_USR}
+      MINIO_PWD: ${MINIO_PWD}
     depends_on:
       - mongo
       - minio
 
   mongo:
     image: mongo:7.0.32-rc1
-    volumes:
-      - mongo_data:/data/db
+    # volumes:
+    #   - mongo_data:/data/db
     # Uncomment to access MongoDB from host (e.g. Compass):
     # ports:
     #   - "27017:27017"
@@ -31,25 +31,11 @@ services:
       - "9000:9000"   # S3 API — browser loads images through this
       - "9001:9001"   # MinIO web console
     environment:
-      MINIO_ROOT_USER: admin
-      MINIO_ROOT_PASSWORD: password123
-    volumes:
-      - minio_data:/data
+      MINIO_ROOT_USER: ${MINIO_USR}
+      MINIO_ROOT_PASSWORD: ${MINIO_PWD}
+    # volumes:
+    #   - minio_data:/data
 
-  # One-time init container: creates the bucket and sets it public
-  minio-init:
-    image: minio/mc
-    depends_on:
-      - minio
-    entrypoint: >
-      /bin/sh -c "
-      sleep 3;
-      mc alias set local http://localhost:9000 admin password123;
-      mc mb --ignore-existing local/blog-image;
-      mc anonymous set public local/blog-image;
-      echo 'Bucket ready';
-      "
-
-volumes:
-  mongo_data:
-  minio_data:
+# volumes:
+#   mongo_data:
+#   minio_data:
