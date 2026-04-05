@@ -1,7 +1,9 @@
 services:
 
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.web_app
     ports:
       - "8000:5000"
     environment:
@@ -35,6 +37,28 @@ services:
       MINIO_ROOT_PASSWORD: ${MINIO_PWD}
     # volumes:
     #   - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # Runs once after MinIO is healthy: creates the bucket and sets it public.
+  minio-init:
+    image: minio/mc
+    depends_on:
+      minio:
+        condition: service_healthy
+    environment:
+      MINIO_USR: ${MINIO_USR}
+      MINIO_PWD: ${MINIO_PWD}
+    entrypoint: >
+      /bin/sh -c "
+      mc alias set local http://minio:9000 $${MINIO_USR} $${MINIO_PWD};
+      mc mb --ignore-existing local/blog-image;
+      mc anonymous set public local/blog-image;
+      echo 'Bucket blog-image is ready.';
+      "
 
 # volumes:
 #   mongo_data:
