@@ -10,6 +10,9 @@ from bson.errors import InvalidId
 from datetime import datetime
 import os
 
+#debug load-balancer
+import socket
+
 MONGODB_HOST = os.environ["MONGODB_HOST"]
 MINIO_URL = os.environ["MINIO_URL"]
 MINIO_USR = os.environ["MINIO_USR"]
@@ -210,3 +213,11 @@ def upload_image():
 
         image_url = f"{MINIO_PUBLIC_URL}/blog-image/{object_key}"
         return jsonify({'location': image_url})
+
+
+@app.route('/debug/info')
+def debug_info():
+    return jsonify({
+        "status": "healthy",
+        "handled_by_host": socket.gethostname()
+    })
