@@ -65,6 +65,9 @@
                         {% if post['created'] %}
                             <small class="text-muted">&#128197; {{ post['created'] }}</small>
                         {% endif %}
+                        {% if post['tag'] %}
+                            <small class="text-muted">&#128278; {{ post['tag'] }}</small>
+                        {% endif %}
                         <small class="text-muted ml-2">&#128214; {{ read_time }} min</small>
                     </div>
 

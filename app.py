@@ -116,6 +116,7 @@ def create():
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
+        tag = request.form['tag']
 
         if not title:
             flash('Title is required!', 'danger')
@@ -126,7 +127,8 @@ def create():
                 '_id': ObjectId(draft_id),
                 'title': title,
                 'content': content,
-                'created': datetime.now().strftime("%Y-%m-%d %H:%M")
+                'created': datetime.now().strftime("%Y-%m-%d %H:%M"),
+                'tag': tag
             })
             flash('Post created successfully!', 'success')
             return redirect(url_for('index'))
@@ -156,13 +158,14 @@ def edit(post_id):
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
+        tag = request.form['tag']
 
         if not title:
             flash('Title is required!')
         else:
             collection.update_one(
                 {'_id': ObjectId(post_id)},
-                {'$set': {'title': title, 'content': content}}
+                {'$set': {'title': title, 'content': content, 'tag': tag}}
             )
             return redirect(url_for('index'))
     return render_template('edit.html', post=post)
@@ -171,7 +174,7 @@ def edit(post_id):
 def delete(post_id):
     post = get_post(post_id)
     collection.delete_one({"_id": ObjectId(post_id)})
-    flash(f'"{post["title"]}" was successfully deleted!', 'success') # Uncommented and updated
+    flash(f'"{post["title"]}" was successfully deleted!', 'success')
     return redirect(url_for('index'))
 
 
