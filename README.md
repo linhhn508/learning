@@ -9,7 +9,7 @@ flask run -p 5000 -h 0.0.0.0
 ## Run with Docker Compose (recommended)
 
 ```
-docker compose --env-file .env up --build -d
+docker compose --env-file .env up --build -d --scale web=3
 ```
 
 First-time MinIO bucket setup (run once after `docker compose up`):
