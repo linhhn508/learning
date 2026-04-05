@@ -8,6 +8,8 @@ COPY pyproject.toml ./
 
 RUN uv sync
 
-COPY . .
+COPY static ./static
+COPY templates ./templates
+COPY app.py .
 
 CMD ["uv", "run", "--", "flask", "run", "-h", "0.0.0.0", "-p", "5000"]
